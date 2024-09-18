@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <div class="quiz-box">
+        <h1 class="quiz-heading">Quiz App</h1>
+
+        <div class="question-container">
+            <h2 class="quesiton-heading">Question</h2>
+            <div class="curr-question" id="question"></div>
+        </div>
+
+        <div class="question-options" id="options">
+            <h2>Options</h2>
+            <button class="answerButton" id="answerA">Answer A</button>
+            <button class="answerButton" id="answerB">Answer B</button>
+            <button class="answerButton" id="answerC">Answer C</button>
+            <button class="answerButton" id="answerD">Answer D</button>
+        </div>
+
+        <div class="info">
+            <div id="score">
+                <h3>Score</h3>
+                <div class="score-count"></div>
+            </div>
+
+            <div id="timer">
+                <h3>Time Left</h3>
+                <div class="timer"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="module" src="app.js"></script>
+
+
+</body>
+
+</html>
+import { Questions } from './Questions.js';
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const quiz = new Questions();
+    console.log(`is quiz? ${quiz}`);
+
+    quiz.fetchQuestions().then(() => {
+        quiz.handleDisplayQuestion(); // Call this after questions are fetched
+    });
+});
+/* CSS Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+ul {
+    list-style-type: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+}
+
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: rgb(45, 193, 252);
+}
+
+.quiz-box {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+
+    background-color: aliceblue;
+}
+
+.quiz-heading {
+    font-size: 2.5em; /* Large font size for the main title */
+    font-weight: bold; /* Make the title bold */
+    color: #ffffff; /* Dark color for readability */
+    text-align: center; /* Center-align the text */
+    margin-bottom: 20px; /* Space below the heading */
+    padding: 10px; /* Padding around the heading */
+    background-color: #528dcc; /* Light background color for emphasis */
+    border-radius: 8px; /* Rounded corners */
+    border: 2px solid #00acc1; /* Border color matching the background */
+}
+
+.question-heading {
+    font-size: 1.5em; /* Medium-large font size for emphasis */
+    font-weight: bold; /* Bold text for prominence */
+    color: #333; /* Dark color for readability */
+    margin-bottom: 10px; /* Space below the header */
+    border-bottom: 2px solid #00acc1; /* Underline effect with a border */
+    padding-bottom: 5px; /* Padding to add space between text and border */
+    text-transform: uppercase; /* Uppercase text for a formal look */
+}
+
+.options-heading {
+    font-size: 1.25em; /* Slightly smaller font size than the question header */
+    font-weight: bold; /* Bold text for emphasis */
+    color: #444; /* Slightly lighter color for a less prominent look */
+    margin-bottom: 10px; /* Space below the header */
+    border-bottom: 1px solid #ddd; /* Subtle underline effect */
+    padding-bottom: 5px; /* Padding to add space between text and border */
+    text-transform: uppercase; /* Uppercase text for consistency */
+}
+
+
+.question-options {
+    display: flex;
+    flex-direction: column;
+}
+
+.curr-question {
+    font-size: 1.25em; /* Slightly larger font size for the question text */
+    padding: 10px; /* Padding around the question text */
+    background-color: #f9f9f9; /* Light background for contrast */
+    border: 1px solid #ddd; /* Light border around the question text */
+    border-radius: 5px; /* Rounded corners */
+    color: #333333; /* Medium grey color for the text */
+    margin-bottom: 20px; /* Space below the question text */
+}
+
+.answerButton {
+    background-color: #528dcc; /* Background color */
+    color: #fff; /* Text color */
+    border: none; /* Remove default border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px 20px; /* Padding inside the button */
+    margin: 5px 0; /* Space between buttons */
+    font-size: 16px; /* Font size */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition for hover effects */
+}
+
+.answerButton:hover {
+    background-color: #0056b3; /* Darker background color on hover */
+}
+
+.answerButton:active {
+    transform: scale(0.98); 
+}
+
+.info {
+    display: flex;
+    justify-content: space-between; 
+}
+
+.info {
+    display: flex;
+    justify-content: space-between; /* Align items to the left and right */
+    padding: 10px; /* Optional: add padding around the container */
+    width: 100%; /* Ensure the container spans the full width of its parent */
+}
+
+#score, #timer {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center align items horizontally */
+    text-align: center; /* Center align text */
+}
+
+#score h3, #timer h3 {
+    margin-bottom: 5px; /* Space below the heading */
+    color: #333; /* Dark color for headings */
+}
+
+.score-count, .timer {
+    font-size: 1.5em; /* Larger font size for visibility */
+    color: #555; /* Medium grey color for the count and timer */
+}
+[
+  {
+    "questions": [
+      {
+        "id": 1,
+        "question": "What is the chemical symbol for water?",
+        "options": ["H2O", "O2", "CO2", "NaCl"],
+        "answer": "H2O"
+      },
+      {
+        "id": 2,
+        "question": "What planet is known as the Red Planet?",
+        "options": ["Mars", "Venus", "Earth", "Jupiter"],
+        "answer": "Mars"
+      },
+      {
+        "id": 3,
+        "question": "Who wrote 'To Kill a Mockingbird'?",
+        "options": ["Harper Lee", "Mark Twain", "Ernest Hemingway", "F. Scott Fitzgerald"],
+        "answer": "Harper Lee"
+      },
+      {
+        "id": 4,
+        "question": "What is the capital of France?",
+        "options": ["Paris", "London", "Berlin", "Madrid"],
+        "answer": "Paris"
+      },
+      {
+        "id": 5,
+        "question": "What is the largest ocean on Earth?",
+        "options": ["Pacific Ocean", "Atlantic Ocean", "Indian Ocean", "Arctic Ocean"],
+        "answer": "Pacific Ocean"
+      },
+      {
+        "id": 6,
+        "question": "What is the hardest natural substance on Earth?",
+        "options": ["Diamond", "Gold", "Iron", "Platinum"],
+        "answer": "Diamond"
+      },
+      {
+        "id": 7,
+        "question": "What is the largest planet in our solar system?",
+        "options": ["Jupiter", "Saturn", "Earth", "Neptune"],
+        "answer": "Jupiter"
+      },
+      {
+        "id": 8,
+        "question": "What year did the Titanic sink?",
+        "options": ["1912", "1905", "1923", "1898"],
+        "answer": "1912"
+      },
+      {
+        "id": 9,
+        "question": "Who painted the Mona Lisa?",
+        "options": ["Leonardo da Vinci", "Vincent van Gogh", "Pablo Picasso", "Claude Monet"],
+        "answer": "Leonardo da Vinci"
+      },
+      {
+        "id": 10,
+        "question": "What is the chemical symbol for gold?",
+        "options": ["Au", "Ag", "Pb", "Fe"],
+        "answer": "Au"
+      },
+      {
+        "id": 11,
+        "question": "Who is known as the father of modern physics?",
+        "options": ["Albert Einstein", "Isaac Newton", "Niels Bohr", "Galileo Galilei"],
+        "answer": "Albert Einstein"
+      },
+      {
+        "id": 12,
+        "question": "What is the smallest prime number?",
+        "options": ["2", "1", "3", "5"],
+        "answer": "2"
+      },
+      {
+        "id": 13,
+        "question": "Which element has the atomic number 1?",
+        "options": ["Hydrogen", "Helium", "Lithium", "Beryllium"],
+        "answer": "Hydrogen"
+      },
+      {
+        "id": 14,
+        "question": "What is the main ingredient in guacamole?",
+        "options": ["Avocado", "Tomato", "Onion", "Pepper"],
+        "answer": "Avocado"
+      },
+      {
+        "id": 15,
+        "question": "What is the largest desert in the world?",
+        "options": ["Sahara Desert", "Arctic Desert", "Gobi Desert", "Antarctic Desert"],
+        "answer": "Antarctic Desert"
+      },
+      {
+        "id": 16,
+        "question": "What is the capital of Japan?",
+        "options": ["Tokyo", "Kyoto", "Osaka", "Nagoya"],
+        "answer": "Tokyo"
+      },
+      {
+        "id": 17,
+        "question": "What gas do plants primarily use for photosynthesis?",
+        "options": ["Carbon Dioxide", "Oxygen", "Nitrogen", "Hydrogen"],
+        "answer": "Carbon Dioxide"
+      },
+      {
+        "id": 18,
+        "question": "Who was the first man to walk on the moon?",
+        "options": ["Neil Armstrong", "Buzz Aldrin", "Yuri Gagarin", "Michael Collins"],
+        "answer": "Neil Armstrong"
+      },
+      {
+        "id": 19,
+        "question": "What is the largest mammal in the world?",
+        "options": ["Blue Whale", "Elephant", "Giraffe", "Hippopotamus"],
+        "answer": "Blue Whale"
+      },
+      {
+        "id": 20,
+        "question": "Which planet is known for its rings?",
+        "options": ["Saturn", "Uranus", "Neptune", "Mars"],
+        "answer": "Saturn"
+      },
+      {
+        "id": 21,
+        "question": "What is the freezing point of water in Celsius?",
+        "options": ["0°C", "32°C", "100°C", "273°C"],
+        "answer": "0°C"
+      },
+      {
+        "id": 22,
+        "question": "What is the main language spoken in Brazil?",
+        "options": ["Portuguese", "Spanish", "English", "French"],
+        "answer": "Portuguese"
+      },
+      {
+        "id": 23,
+        "question": "Who is the author of '1984'?",
+        "options": ["George Orwell", "Aldous Huxley", "Ray Bradbury", "H.G. Wells"],
+        "answer": "George Orwell"
+      },
+      {
+        "id": 24,
+        "question": "What is the capital of Australia?",
+        "options": ["Canberra", "Sydney", "Melbourne", "Brisbane"],
+        "answer": "Canberra"
+      },
+      {
+        "id": 25,
+        "question": "Which element is represented by the symbol 'Na'?",
+        "options": ["Sodium", "Neon", "Nickel", "Nitrogen"],
+        "answer": "Sodium"
+      },
+      {
+        "id": 26,
+        "question": "Who wrote the play 'Romeo and Juliet'?",
+        "options": ["William Shakespeare", "Christopher Marlowe", "Ben Jonson", "John Milton"],
+        "answer": "William Shakespeare"
+      },
+      {
+        "id": 27,
+        "question": "What is the longest river in the world?",
+        "options": ["Nile", "Amazon", "Yangtze", "Mississippi"],
+        "answer": "Nile"
+      },
+      {
+        "id": 28,
+        "question": "What is the chemical formula for table salt?",
+        "options": ["NaCl", "KCl", "MgCl2", "CaCl2"],
+        "answer": "NaCl"
+      },
+      {
+        "id": 29,
+        "question": "Which country is known as the Land of the Rising Sun?",
+        "options": ["Japan", "China", "Thailand", "South Korea"],
+        "answer": "Japan"
+      },
+      {
+        "id": 30,
+        "question": "What is the hardest known natural material?",
+        "options": ["Diamond", "Ruby", "Sapphire", "Emerald"],
+        "answer": "Diamond"
+      },
+      {
+        "id": 31,
+        "question": "Who painted the Sistine Chapel ceiling?",
+        "options": ["Michelangelo", "Raphael", "Leonardo da Vinci", "Caravaggio"],
+        "answer": "Michelangelo"
+      },
+      {
+        "id": 32,
+        "question": "What is the most abundant gas in Earth's atmosphere?",
+        "options": ["Nitrogen", "Oxygen", "Carbon Dioxide", "Argon"],
+        "answer": "Nitrogen"
+      },
+      {
+        "id": 33,
+        "question": "Which organ in the human body is primarily responsible for pumping blood?",
+        "options": ["Heart", "Lungs", "Liver", "Kidneys"],
+        "answer": "Heart"
+      },
+      {
+        "id": 34,
+        "question": "In what year did the Berlin Wall fall?",
+        "options": ["1989", "1991", "1987", "1990"],
+        "answer": "1989"
+      },
+      {
+        "id": 35,
+        "question": "What is the largest island in the world?",
+        "options": ["Greenland", "New Guinea", "Borneo", "Madagascar"],
+        "answer": "Greenland"
+      },
+      {
+        "id": 36,
+        "question": "Who is the Greek goddess of wisdom?",
+        "options": ["Athena", "Hera", "Aphrodite", "Demeter"],
+        "answer": "Athena"
+      },
+      {
+        "id": 37,
+        "question": "What is the capital city of Canada?",
+        "options": ["Ottawa", "Toronto", "Vancouver", "Montreal"],
+        "answer": "Ottawa"
+      },
+      {
+        "id": 38,
+        "question": "Which planet is known for its Great Red Spot?",
+        "options": ["Jupiter", "Saturn", "Uranus", "Neptune"],
+        "answer": "Jupiter"
+      },
+      {
+        "id": 39,
+        "question": "Who developed the theory of relativity?",
+        "options": ["Albert Einstein", "Isaac Newton", "Stephen Hawking", "Niels Bohr"],
+        "answer": "Albert Einstein"
+      },
+      {
+        "id": 40,
+        "question": "What is the chemical symbol for potassium?",
+        "options": ["K", "P", "Pt", "Po"],
+        "answer": "K"
+      }
+    ]
+  }
+]
+export class Questions {
+    constructor() {
+        this.loadedQuestions = [];
+    }
+
+    fetchQuestions() {
+        return fetch('questions.json') // Return the fetch promise
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json(); // Convert the response to JSON
+            })
+            .then(loadedQuestions => {
+                this.loadedQuestions = loadedQuestions[0].questions; // Access the questions
+            })
+            .catch(error => {
+                console.error('Error fetching JSON:', error); // Log any errors
+            });
+    }
+
+    handleDisplayQuestion() {
+        if (this.loadedQuestions.length === 0) {
+            console.log("No more questions available.");
+            return;
+        }
+
+        const randomIndex = Math.floor(Math.random() * this.loadedQuestions.length);
+        const randomQuestion = this.loadedQuestions[randomIndex];
+
+        document.getElementById('question').textContent = randomQuestion.question;
+        document.getElementById('answerA').textContent = randomQuestion.options[0];
+        document.getElementById('answerB').textContent = randomQuestion.options[1];
+        document.getElementById('answerC').textContent = randomQuestion.options[2];
+        document.getElementById('answerD').textContent = randomQuestion.options[3];
+
+        this.loadedQuestions.splice(randomIndex, 1);
+    }
+}
