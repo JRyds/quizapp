@@ -1,6 +1,9 @@
 export class Questions {
-    constructor() {
+
+    constructor(score) {
         this.loadedQuestions = [];
+        this.score = 0
+        this.currentQuestionAnswer = null;
     }
 
     fetchQuestions() {
@@ -20,28 +23,39 @@ export class Questions {
     }
 
     handleDisplayQuestion() {
+        //check if run out of questions
         if (this.loadedQuestions.length === 0) {
             console.log("No more questions available.");
             return;
         }
-
+        //select a random quesiton remaing from the pool
         const randomIndex = Math.floor(Math.random() * this.loadedQuestions.length);
         const randomQuestion = this.loadedQuestions[randomIndex];
 
+        // Shuffle the options array to randomize the answer order
+        randomQuestion.options.sort(() => Math.random() - 0.5);
+
+        //assign question elements to the correct items
+        this.currentQuestionAnswer = randomQuestion.answer;
         document.getElementById('question').textContent = randomQuestion.question;
         document.getElementById('answerA').textContent = randomQuestion.options[0];
         document.getElementById('answerB').textContent = randomQuestion.options[1];
         document.getElementById('answerC').textContent = randomQuestion.options[2];
         document.getElementById('answerD').textContent = randomQuestion.options[3];
 
-        // Add event listeners for answer buttons here
-        const answerButtons = document.querySelectorAll('.answerButton');
-        answerButtons.forEach((button, index) => {
-            button.addEventListener('click', () => {
-                this.handleAnswer(randomQuestion.options[index], randomQuestion.answer);
-            });
-        });
-
+        //remove current question from the pool
         this.loadedQuestions.splice(randomIndex, 1);
+    }
+
+    //receive user answer and check against correct answer and update score then call new quesiton
+    handleAnswer(userAnswer) {
+        if (userAnswer === this.currentQuestionAnswer) {
+            this.score += 1;
+            document.getElementById('score-count').textContent = this.score;
+
+        } else {
+            console.log("incorrect");
+        }
+        this.handleDisplayQuestion();
     }
 }
