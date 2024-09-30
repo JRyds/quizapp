@@ -24,6 +24,11 @@ export class Questions {
 
     handleDisplayQuestion() {
         //check if run out of questions
+
+        option - buttons.forEach(button => {
+            button.classList.remove('incorrect'); // Remove the incorrect class
+        });
+
         if (this.loadedQuestions.length === 0) {
             console.log("No more questions available.");
             return;
@@ -54,8 +59,26 @@ export class Questions {
             document.getElementById('score-count').textContent = this.score;
 
         } else {
-            console.log("incorrect");
+
+            const answerOptions = document.querySelectorAll(".answerButton");
+            let incorrectButton = null;
+            answerOptions.forEach(button => {
+                if (button.textContent === this.currentQuestionAnswer) {
+                    incorrectButton = button.classList.add("incorrect-highlight")
+                }
+
+            });
+            incorrectButton = incorrectButton.classList.remove("incorrect-highlight");
+            setTimeout(() => {
+                console.log("settimeout adfter 1 second fired");
+
+                this.handleDisplayQuestion();
+            }, 1000)();
+
+
         }
-        this.handleDisplayQuestion();
+
+
+
     }
 }

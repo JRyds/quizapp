@@ -1,3 +1,5 @@
+/* STYLES.CSS */
+
 /* CSS Reset */
 * {
     margin: 0;
@@ -35,8 +37,11 @@ body {
     display: flex;
     flex-direction: column;
     padding: 1rem;
-
+    width: 90%; /* Use a percentage for flexibility */
+    max-width: 600px; /* Limit maximum width for larger screens */
+    height: auto; /* Allow height to adjust based on content */
     background-color: aliceblue;
+    margin: auto; /* Center the box */
 }
 
 .quiz-heading {
@@ -78,13 +83,35 @@ body {
 }
 
 .curr-question {
-    font-size: 1.25em; /* Slightly larger font size for the question text */
-    padding: 10px; /* Padding around the question text */
+    font-size: 1.5rem; /* Slightly larger font size for the question text */
+    overflow-wrap: break-word; 
+    padding: 1rem; /* Padding around the question text */
     background-color: #f9f9f9; /* Light background for contrast */
     border: 1px solid #ddd; /* Light border around the question text */
     border-radius: 5px; /* Rounded corners */
     color: #333333; /* Medium grey color for the text */
     margin-bottom: 20px; /* Space below the question text */
+}
+
+.incorrect-highlight {
+    font-size: 1.5rem; /* Slightly larger font size for the question text */
+    overflow-wrap: break-word; 
+    padding: 1rem; /* Padding around the question text */
+    background-color: #ec5858; /* Light background for contrast */
+    border: 1px solid #ddd; /* Light border around the question text */
+    border-radius: 5px; /* Rounded corners */
+    color: #333333; /* Medium grey color for the text */
+    margin-bottom: 20px; /* Space below the question text */
+}
+
+@media (max-width: 768px) {
+    .quiz-box {
+        width: 95%; /* Slightly increase width on smaller screens */
+    }
+    
+    .curr-question {
+        font-size: 4vw; /* Increase font size for better readability on mobile */
+    }
 }
 
 .answerButton {
@@ -94,7 +121,7 @@ body {
     border-radius: 5px; /* Rounded corners */
     padding: 10px 20px; /* Padding inside the button */
     margin: 5px 0; /* Space between buttons */
-    font-size: 16px; /* Font size */
+    font-size: 1.25rem; /* Font size */
     cursor: pointer; /* Pointer cursor on hover */
     transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition for hover effects */
 }

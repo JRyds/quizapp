@@ -20,21 +20,23 @@
 
         <div class="question-options" id="options">
             <h2 class="option-heading">Options</h2>
-            <button class="answerButton" id="answerA">Answer A</button>
-            <button class="answerButton" id="answerB">Answer B</button>
-            <button class="answerButton" id="answerC">Answer C</button>
-            <button class="answerButton" id="answerD">Answer D</button>
+            <div class="option-buttons">
+                <button class="answerButton" id="answerA">Answer A</button>
+                <button class="answerButton" id="answerB">Answer B</button>
+                <button class="answerButton" id="answerC">Answer C</button>
+                <button class="answerButton" id="answerD">Answer D</button>
+            </div>
         </div>
 
         <div class="info">
-            <div id="score">
+            <div class="score">
                 <h3>Score</h3>
                 <div id="score-count">0</div>
             </div>
 
-            <div id="timer">
+            <div class="timer">
                 <h3>Time Left</h3>
-                <div class="timer"></div>
+                <div id="timer-number">--:--</div>
             </div>
         </div>
     </div>
@@ -46,6 +48,8 @@
 </body>
 
 </html>
+/* STYLES.CSS */
+
 /* CSS Reset */
 * {
     margin: 0;
@@ -83,8 +87,11 @@ body {
     display: flex;
     flex-direction: column;
     padding: 1rem;
-
+    width: 90%; /* Use a percentage for flexibility */
+    max-width: 600px; /* Limit maximum width for larger screens */
+    height: auto; /* Allow height to adjust based on content */
     background-color: aliceblue;
+    margin: auto; /* Center the box */
 }
 
 .quiz-heading {
@@ -126,13 +133,35 @@ body {
 }
 
 .curr-question {
-    font-size: 1.25em; /* Slightly larger font size for the question text */
-    padding: 10px; /* Padding around the question text */
+    font-size: 1.5rem; /* Slightly larger font size for the question text */
+    overflow-wrap: break-word; 
+    padding: 1rem; /* Padding around the question text */
     background-color: #f9f9f9; /* Light background for contrast */
     border: 1px solid #ddd; /* Light border around the question text */
     border-radius: 5px; /* Rounded corners */
     color: #333333; /* Medium grey color for the text */
     margin-bottom: 20px; /* Space below the question text */
+}
+
+.incorrect-highlight {
+    font-size: 1.5rem; /* Slightly larger font size for the question text */
+    overflow-wrap: break-word; 
+    padding: 1rem; /* Padding around the question text */
+    background-color: #ec5858; /* Light background for contrast */
+    border: 1px solid #ddd; /* Light border around the question text */
+    border-radius: 5px; /* Rounded corners */
+    color: #333333; /* Medium grey color for the text */
+    margin-bottom: 20px; /* Space below the question text */
+}
+
+@media (max-width: 768px) {
+    .quiz-box {
+        width: 95%; /* Slightly increase width on smaller screens */
+    }
+    
+    .curr-question {
+        font-size: 4vw; /* Increase font size for better readability on mobile */
+    }
 }
 
 .answerButton {
@@ -142,7 +171,7 @@ body {
     border-radius: 5px; /* Rounded corners */
     padding: 10px 20px; /* Padding inside the button */
     margin: 5px 0; /* Space between buttons */
-    font-size: 16px; /* Font size */
+    font-size: 1.25rem; /* Font size */
     cursor: pointer; /* Pointer cursor on hover */
     transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition for hover effects */
 }
@@ -167,19 +196,51 @@ body {
     width: 100%; /* Ensure the container spans the full width of its parent */
 }
 
-#score, #timer {
+.score, .timer {
     display: flex;
     flex-direction: column; /* Stack items vertically */
     align-items: center; /* Center align items horizontally */
     text-align: center; /* Center align text */
-}
-
-#score h3, #timer h3 {
     margin-bottom: 5px; /* Space below the heading */
     color: #333; /* Dark color for headings */
 }
 
-.score-count, .timer {
+
+
+#score-count, #timer-number {
     font-size: 1.5em; /* Larger font size for visibility */
     color: #555; /* Medium grey color for the count and timer */
 }
+// APP.JS
+
+//Instantiate Classes: Create instances of the Quiz, Timer, and any other necessary classes.
+
+// Fetch Questions: Call the fetchQuestions method from the Quiz class to load the questions from the
+// JSON file.
+
+// Start the Quiz: After fetching questions, call the startQuiz method to display the first question.
+
+// Set Up Event Listeners: Add event listeners for user interactions, such as answer button clicks.
+// These listeners would call methods from the AnswerHandler or Question classes to handle user responses.
+
+// Manage Quiz Flow: Control the overall flow of the quiz by coordinating between the Quiz,
+// Question, and Timer classes, ensuring that questions are displayed, scores are updated,
+// and the timer is managed appropriately.
+
+// Handle End of Quiz: Determine when the quiz is over (e.g., when there are no more questions) and
+// handle the display of the final score or any other end-of-quiz actions.
+//QUIZ.JS
+//constructor(): Initializes the quiz state, including score and loaded questions.
+// fetchQuestions(): Fetches questions from the JSON file and stores them.
+// startQuiz(): Begins the quiz process, displaying the first question.
+//QUESTION.JS
+//constructor(questionData): Initializes a question object with its text, options, and correct answer.
+// display(): Updates the DOM to show the question and its answer options.
+// highlightCorrectAnswer(): Highlights the correct answer when the user selects an incorrect option.
+//ANSWERHANDLER.JS
+//handleAnswer(selectedAnswer): Checks if the selected answer is correct and updates the score.
+// provideFeedback(isCorrect): Provides visual feedback based on whether the answer was correct or not.
+//TIMER.JS
+//startTimer(duration): Starts a timer for each question.
+// stopTimer(): Stops the timer when the question is answered or times out.
+// updateDisplay(): Updates the timer display in the UI.
